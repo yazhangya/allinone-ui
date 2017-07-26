@@ -1,37 +1,86 @@
-<div>
-  <h1 x-large class="sample-content">Your Content Here</h1>
+<md-card>
+  <md-card-title>基本信息选择</md-card-title>
+  <table>
+    <tr>
+      <td>
+        <md-input-container class="full-width">
+          <input mdInput style="display:none"/>
+          <md-select required placeholder="DataBase" [(ngModel)]="model.dataBase"
+                     name="dataBase" style="width: 300px" (change)="getTables()">
+            <md-option *ngFor="let dataBase of dataBases" [value]="dataBase">
+              {{ dataBase }}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </td>
+      <td>
+        <md-input-container class="full-width">
+          <input mdInput style="display:none"/>
+          <md-select required placeholder="Table" [(ngModel)]="model.table"
+                     name="table" style="width: 500px" (change)="getFields()" >
+            <md-option *ngFor="let table of tables" [value]="table.name">
+              {{ table.name }}-{{ table.remark }}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </td>
+      <td>
+        <md-input-container class="full-width">
+          <input mdInput placeholder="项目名称" [(ngModel)]="model.projectName" name="projectName" #projectName="ngModel" required/>
+          <md-hint *ngIf="!(projectName.valid || projectName.pristine)">
+            项目名称是必填的
+          </md-hint>
+        </md-input-container>
+      </td>
+      <td>
+        <md-input-container class="full-width">
+          <input mdInput placeholder="类名" [(ngModel)]="model.domain" name="domain" #domain="ngModel" required/>
+          <md-hint *ngIf="!(domain.valid || domain.pristine)">
+            类名是必填的
+          </md-hint>
+        </md-input-container>
+      </td>
+      <td>
+          <button  type="button" md-raised-button [disabled]="!(model.dataBase && model.table && model.projectName && model.domain)" (click)="createPage()">生成页面</button>
+      </td>
+    </tr>
+  </table>
 
-  <hr>
 
-  <div>
-    For hot module reloading run
-    <pre>npm run start:hmr</pre>
-  </div>
-
-  <hr>
-
-  <div>
-    <h4>Local State</h4>
-
-    <form (ngSubmit)="submitState(localState.value)" autocomplete="off">
-
-      <input
-        [value]="localState.value"
-        (input)="localState.value = $event.target.value"
-        placeholder="Submit Local State to App State"
-        autofocus>
-
-      <button>Submit Value</button>
-    </form>
-    <!--
-        <input type="text" [value]="localState.value" (input)="localState.value = $event.target.value" autofocus>
-        Rather than wiring up two-way data-binding ourselves with [value] and (input)
-        we can use Angular's [(ngModel)] syntax
-        <input type="text" name="textInput" [(ngModel)]="localState.value" autofocus>
-      -->
-
-    <pre>this.localState = {{ localState | json }}</pre>
-
-  </div>
-
-</div>
+  <form *ngIf="!loading">
+    <table width="100%">
+      <thead>
+        <tr>
+          <td>字段名称</td>
+          <td>字段类型</td>
+          <td>字段描述</td>
+          <td>列表展示<md-checkbox (change)="allShow()" class="example-margin" [(ngModel)]="show" name="show"></md-checkbox></td>
+          <td>列表搜索<md-checkbox (change)="allFilter()" class="example-margin" [(ngModel)]="filter" name="show"></md-checkbox></td>
+          <td>表单填写<md-checkbox (change)="allAdd()" class="example-margin" [(ngModel)]="add" name="show"></md-checkbox></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let field of fields ; let i = index;">
+          <td>
+            {{ field.name }}
+          </td>
+          <td>
+            {{ field.type }}
+          </td>
+          <td>
+            {{ field.comment }}
+          </td>
+          <td>
+            <md-checkbox class="example-margin" [(ngModel)]="field.show" [name]="'field.name'+i*10+1"></md-checkbox>
+          </td>
+          <td>
+            <md-checkbox class="example-margin" [(ngModel)]="field.filter" [name]="'field.name'+i*10+2"></md-checkbox>
+          </td>
+          <td>
+            <md-checkbox class="example-margin" [(ngModel)]="field.add" [name]="'field.name'+i*10+3"></md-checkbox>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</md-card>

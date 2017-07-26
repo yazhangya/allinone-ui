@@ -24,13 +24,13 @@ import { ROUTES } from './app.routes';
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState, InternalStateType } from './app.service';
-import { HomeComponent } from './home';
-import { AboutComponent } from './about';
-import { NoContentComponent } from './no-content';
-import { XLargeDirective } from './home/x-large';
+import { HomeComponent } from './home/home.component';
 
 import '../styles/styles.scss';
 import '../styles/headings.css';
+import { MaterialModule } from './common/customer-material';
+import { DataBaseService } from "./home/database.service";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -50,11 +50,8 @@ type StoreType = {
 @NgModule({
   bootstrap: [ AppComponent ],
   declarations: [
-    AppComponent,
-    AboutComponent,
     HomeComponent,
-    NoContentComponent,
-    XLargeDirective
+    AppComponent
   ],
   /**
    * Import Angular's modules.
@@ -63,6 +60,8 @@ type StoreType = {
     BrowserModule,
     FormsModule,
     HttpModule,
+    BrowserAnimationsModule,
+    MaterialModule,
     RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules })
   ],
   /**
@@ -70,7 +69,8 @@ type StoreType = {
    */
   providers: [
     ENV_PROVIDERS,
-    APP_PROVIDERS
+    APP_PROVIDERS,
+    DataBaseService,
   ]
 })
 export class AppModule {
